@@ -102,16 +102,68 @@ export default {
       return handledError(res, e);
     }
   },
+  /**
+   * Updates a location in the database. A JSON body can be a partial object. Only the included keys
+   * will be updated in the existing object
+   *
+   * @function
+   * @param {Object} req - The request object from express
+   * @param {Object} res - The response object from express. The request must contain a JSON object in
+   * its body and a param `id` for the object Id
+   * @return {undefined}
+   */
   async updateLocation(req, res) {
-    try {
-      responseJSON('updateLocation', HTTP_CODES.OK, res);
-    } catch (e) {
-      return handledError(res, e);
+    // TODO: Authenticate request
+    const locationId = get(req, 'params.id', 0);
+    const locationBody = req.body;
+    const hasRequiredKeys = requiredLocationFields.some(key => Object.keys(locationBody).includes(key));
+    if (!hasRequiredKeys || locationId === 0) {
+      responseJSON(
+          `At least one of the keys: ${requiredLocationFields} are required, and the locationId must be provided`,
+          HTTP_CODES.BAD_REQUEST,
+          res
+      );
+    } else {
+      try {
+        const locationObject = await Locations.findByPk(locationId);
+        if (locationObject) {
+          const updatedLocation = await locationObject.update(
+              locationBody,
+              { fields: Object.keys(locationBody) }
+              );
+          // TODO: Emit message
+          responseJSON(updatedLocation, HTTP_CODES.CREATED, res);
+
+        } else {
+          responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
+        }
+      } catch (e) {
+        return handledError(res, e);
+      }
     }
   },
+  /**
+   * Deletes a location object given its Id
+   *
+   * @function
+   * @param {Object} req - The request object from express
+   * @param {Object} res - The response object from express. The request must contain a
+   * param `id` for the object Id
+   * @return {undefined}
+   */
   async deleteLocation(req, res) {
+    // TODO: Authenticate request
+    const locationId = get(req, 'params.id', 0);
     try {
-      responseJSON('deleteLocation', HTTP_CODES.OK, res);
+      const location = await Locations.findByPk(locationId);
+      if (location) {
+        await location.destroy();
+        // TODO: Emit message
+        responseJSON(undefined, HTTP_CODES.NO_CONTENT, res);
+      } else {
+        responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
+      }
+
     } catch (e) {
       return handledError(res, e);
     }
