@@ -1,7 +1,14 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import dotenv from 'dotenv'
+
 import locations from './locations/router'
 import { DEFAULT_PORT } from './constants'
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
+
 const app = express();
 
 app.listen(DEFAULT_PORT, ()=>
