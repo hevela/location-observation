@@ -1,37 +1,7 @@
-import get from 'lodash.get'
-import { HTTP_CODES } from '../constants';
-import { Locations } from "../models";
-
-
-/**
- * Attach to a response object a JSON payload and the specified HTTP code
- *
- * @function
- * @param {Object} data - The response to be server to the client.
- * @param {int} code - The HTTP code to attach to the response
- * @param {Object} res - The response object from express
- * @return {undefined}
- */
-const responseJSON = (data, code, res) => {
-  try {
-    res.status(code).json({ data });
-  } catch (e) {
-    console.error('Unknown error', e.message)
-  }
-};
-
-/**
- * Logs an error and returns an error message as payload
- *
- * @function
- * @param {Object} res - The response object from express
- * @param {Error} e - The thrown error object
- * @return {undefined}
- */
-const handledError = (res, e) => {
-  console.error(e.message);
-  responseJSON({ error: e.message}, HTTP_CODES.INTERNAL_SERVER_ERROR, res);
-};
+import get from 'lodash.get';
+import { HTTP_CODES } from '../../constants';
+import { Locations } from "../../models";
+import { responseJSON, handledError } from '../common'
 
 const requiredLocationFields = [
   'name',
@@ -65,7 +35,11 @@ export default {
    * @return {undefined}
    */
   async createLocation(req, res) {
-    // TODO: Authenticate request
+    // Verify authentication
+    if (!req.user) {
+      responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
+      return;
+    }
     const location = req.body;
     const hasRequiredKeys = requiredLocationFields.every(key => Object.keys(location).includes(key));
     if (!hasRequiredKeys) {
@@ -113,7 +87,11 @@ export default {
    * @return {undefined}
    */
   async updateLocation(req, res) {
-    // TODO: Authenticate request
+    // Verify authentication
+    if (!req.user) {
+      responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
+      return;
+    }
     const locationId = get(req, 'params.id', 0);
     const locationBody = req.body;
     const hasRequiredKeys = requiredLocationFields.some(key => Object.keys(locationBody).includes(key));
@@ -152,7 +130,11 @@ export default {
    * @return {undefined}
    */
   async deleteLocation(req, res) {
-    // TODO: Authenticate request
+    // Verify authentication
+    if (!req.user) {
+      responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
+      return;
+    }
     const locationId = get(req, 'params.id', 0);
     try {
       const location = await Locations.findByPk(locationId);

@@ -1,5 +1,5 @@
-import express from 'express'
-import location from './controller'
+import express from 'express';
+import location from './controller';
 
 const app = express();
 
