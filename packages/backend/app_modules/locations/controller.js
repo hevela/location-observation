@@ -1,4 +1,5 @@
 import get from 'lodash.get';
+import io from 'socket.io'
 import { HTTP_CODES } from '../../constants';
 import { Locations } from "../../models";
 import { responseJSON, handledError } from '../common'
@@ -19,8 +20,10 @@ export default {
    * @return {undefined}
    */
   async getAllLocations(req, res) {
+    const io = req.app.get('socketNamespace');
     try {
       const locations = await Locations.findAll();
+      io.emit('message', { event: 'list'});
       responseJSON({ locations }, HTTP_CODES.OK, res);
     } catch (e) {
       handledError(res, e);

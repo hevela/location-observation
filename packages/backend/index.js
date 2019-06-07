@@ -2,6 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import get from 'lodash.get';
+import socketIO from 'socket.io';
+import http from 'http';
+import cors from 'cors';
 
 import locations from './app_modules/locations/router';
 import auth from './app_modules/admin/router';
@@ -16,12 +19,22 @@ const tokenKey = process.env['TOKEN_KEY'];
 
 const app = express();
 
+app.use(cors());
+
+const server = http.Server(app);
+const io = socketIO(server);
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
 app.listen(DEFAULT_PORT, ()=>
     console.log(`Server is listening on port ${DEFAULT_PORT}`));
 
-app.use(bodyParser.json());
+// assign a namespace to the socket and store it in app
+app.set('socketNamespace', io.of('LOCATIONS'));
 
-app.use(function(req,res,next){
+app.use(bodyParser.json());
+app.use(function(req, res, next) {
   try{
     const authorization = get(req, 'headers.authorization', '');
     const token = authorization.split(" ")[1];
