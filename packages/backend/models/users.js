@@ -25,14 +25,13 @@ module.exports = (sequelize, DataTypes) => {
       generateHash(password) {
         return hash(password, bcrypt.genSaltSync(saltRounds));
       },
-      validPassword: function(password) {
-        return bcrypt.compareSync(password, this.password);
-      }
     }
   });
   Users.associate = function(models) {
     // associations can be defined here
   };
-
+  Users.prototype.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+  };
   return Users;
 };
