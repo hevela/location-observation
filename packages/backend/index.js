@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
 import get from 'lodash.get';
 import socketIO from 'socket.io';
-import http from 'http';
 import cors from 'cors';
 
 import locations from './app_modules/locations/router';
@@ -21,17 +20,17 @@ const app = express();
 
 app.use(cors());
 
-const server = http.Server(app);
+
+const server = app.listen(DEFAULT_PORT, ()=>
+    console.log(`Server is listening on port ${DEFAULT_PORT}`));
+
 const io = socketIO(server);
 io.on('connection', function(socket){
   console.log('a user connected');
 });
 
-app.listen(DEFAULT_PORT, ()=>
-    console.log(`Server is listening on port ${DEFAULT_PORT}`));
-
-// assign a namespace to the socket and store it in app
-app.set('socketNamespace', io.of('LOCATIONS'));
+// store the socket in app
+app.set('socket', io);
 
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
