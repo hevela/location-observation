@@ -7,7 +7,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
-const SocketInstance = socketio.connect('http://localhost:3000');
+const apiServer = process.env.VUE_APP_API_ADDRESS;
+const SocketInstance = socketio.connect(apiServer);
 
 Vue.use(new VueSocketIO({
   debug: true,

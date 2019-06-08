@@ -44,7 +44,7 @@ app.use(function(req, res, next) {
               req.user = doc;
               next();
             }
-        )
+        );
       } else {
         req.user = undefined;
         next();

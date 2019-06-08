@@ -26,17 +26,23 @@ export default {
     const password = get(req, 'body.password', '');
     try {
       const user = await Users.findOne({ where: { username } });
+      if(user === null){
+        return responseJSON('Incorrect username or password',
+            HTTP_CODES.NOT_FOUND,
+            res,
+        );
+      }
       if (user.validPassword(password)) {
         const token= jwt.sign({ userId: user.id }, tokenKey);
-        responseJSON({token}, HTTP_CODES.OK, res);
+        return responseJSON({token}, HTTP_CODES.OK, res);
       } else {
-        responseJSON('Incorrect username or password',
+        return responseJSON('Incorrect username or password',
             HTTP_CODES.NOT_FOUND,
             res,
         );
       }
     } catch (e) {
-      handledError(res, e);
+      return handledError(res, e);
     }
   },
 };
