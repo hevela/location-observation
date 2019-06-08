@@ -21,9 +21,9 @@ export default {
   async getAllLocations(req, res) {
     try {
       const locations = await Locations.findAll();
-      responseJSON({ locations }, HTTP_CODES.OK, res);
+      return responseJSON({ locations }, HTTP_CODES.OK, res);
     } catch (e) {
-      handledError(res, e);
+      return handledError(res, e);
     }
   },
   /**
@@ -37,20 +37,19 @@ export default {
   async createLocation(req, res) {
     // Verify authentication
     if (!req.user) {
-      responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
-      return;
+      return responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
     }
     const io = req.app.get('socket');
     const location = req.body;
     const hasRequiredKeys = requiredLocationFields.every(key => Object.keys(location).includes(key));
     if (!hasRequiredKeys) {
-      responseJSON(`The keys ${requiredLocationFields} are required`, HTTP_CODES.BAD_REQUEST, res);
+      return responseJSON(`The keys ${requiredLocationFields} are required`, HTTP_CODES.BAD_REQUEST, res);
     } else {
       try {
         const newLocation = await Locations.create(location);
         // Emit message
         io.emit(CHANNEL, { event: CREATE_EVENT, location: newLocation });
-        responseJSON(newLocation, HTTP_CODES.CREATED, res);
+        return responseJSON(newLocation, HTTP_CODES.CREATED, res);
       } catch (e) {
         return handledError(res, e);
       }
@@ -69,9 +68,9 @@ export default {
     try {
       const location = await Locations.findByPk(locationId);
       if (location) {
-        responseJSON(location, HTTP_CODES.OK, res);
+        return responseJSON(location, HTTP_CODES.OK, res);
       } else {
-        responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
+        return responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
       }
 
     } catch (e) {
@@ -91,15 +90,14 @@ export default {
   async updateLocation(req, res) {
     // Verify authentication
     if (!req.user) {
-      responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
-      return;
+      return responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
     }
     const io = req.app.get('socket');
     const locationId = get(req, 'params.id', 0);
     const locationBody = req.body;
     const hasRequiredKeys = requiredLocationFields.some(key => Object.keys(locationBody).includes(key));
     if (!hasRequiredKeys || locationId === 0) {
-      responseJSON(
+      return responseJSON(
           `At least one of the keys: ${requiredLocationFields} are required, and the locationId must be provided`,
           HTTP_CODES.BAD_REQUEST,
           res
@@ -114,10 +112,10 @@ export default {
               );
           // Emit message
           io.emit(CHANNEL, { event: UPDATED_EVENT, location: updatedLocation });
-          responseJSON(updatedLocation, HTTP_CODES.OK, res);
+          return responseJSON(updatedLocation, HTTP_CODES.OK, res);
 
         } else {
-          responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
+          return responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
         }
       } catch (e) {
         return handledError(res, e);
@@ -136,8 +134,7 @@ export default {
   async deleteLocation(req, res) {
     // Verify authentication
     if (!req.user) {
-      responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
-      return;
+      return responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
     }
     const io = req.app.get('socket');
     const locationId = get(req, 'params.id', 0);
@@ -147,9 +144,9 @@ export default {
         await location.destroy();
         // Emit message
         io.emit(CHANNEL, { event: DELETED_EVENT, locationId });
-        responseJSON(undefined, HTTP_CODES.NO_CONTENT, res);
+        return responseJSON(undefined, HTTP_CODES.NO_CONTENT, res);
       } else {
-        responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
+        return responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
       }
 
     } catch (e) {
