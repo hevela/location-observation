@@ -9,4 +9,9 @@ export const HTTP_CODES = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
+export const CHANNEL = 'message';
+export const CREATE_EVENT = 'CREATED';
+export const DELETED_EVENT = 'DELETED';
+export const UPDATED_EVENT = 'UPDATED';
+
 export const DEFAULT_PORT = 3000;

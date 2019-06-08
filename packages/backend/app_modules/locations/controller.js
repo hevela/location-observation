@@ -1,5 +1,5 @@
 import get from 'lodash.get';
-import { HTTP_CODES } from '../../constants';
+import { HTTP_CODES, CHANNEL, CREATE_EVENT, DELETED_EVENT, UPDATED_EVENT } from '../../constants';
 import { Locations } from "../../models";
 import { responseJSON, handledError } from '../common'
 
@@ -40,6 +40,7 @@ export default {
       responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
       return;
     }
+    const io = req.app.get('socket');
     const location = req.body;
     const hasRequiredKeys = requiredLocationFields.every(key => Object.keys(location).includes(key));
     if (!hasRequiredKeys) {
@@ -47,7 +48,8 @@ export default {
     } else {
       try {
         const newLocation = await Locations.create(location);
-        // TODO: Emit message
+        // Emit message
+        io.emit(CHANNEL, { event: CREATE_EVENT, location: newLocation });
         responseJSON(newLocation, HTTP_CODES.CREATED, res);
       } catch (e) {
         return handledError(res, e);
@@ -92,6 +94,7 @@ export default {
       responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
       return;
     }
+    const io = req.app.get('socket');
     const locationId = get(req, 'params.id', 0);
     const locationBody = req.body;
     const hasRequiredKeys = requiredLocationFields.some(key => Object.keys(locationBody).includes(key));
@@ -109,8 +112,9 @@ export default {
               locationBody,
               { fields: Object.keys(locationBody) }
               );
-          // TODO: Emit message
-          responseJSON(updatedLocation, HTTP_CODES.CREATED, res);
+          // Emit message
+          io.emit(CHANNEL, { event: UPDATED_EVENT, location: updatedLocation });
+          responseJSON(updatedLocation, HTTP_CODES.OK, res);
 
         } else {
           responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
@@ -135,12 +139,14 @@ export default {
       responseJSON('Authentication Required', HTTP_CODES.UNAUTHORIZED, res);
       return;
     }
+    const io = req.app.get('socket');
     const locationId = get(req, 'params.id', 0);
     try {
       const location = await Locations.findByPk(locationId);
       if (location) {
         await location.destroy();
-        // TODO: Emit message
+        // Emit message
+        io.emit(CHANNEL, { event: DELETED_EVENT, locationId });
         responseJSON(undefined, HTTP_CODES.NO_CONTENT, res);
       } else {
         responseJSON({ message: 'Location not found'}, HTTP_CODES.NOT_FOUND, res);
