@@ -1,5 +1,4 @@
 import get from 'lodash.get';
-import io from 'socket.io'
 import { HTTP_CODES, CHANNEL, CREATE_EVENT, DELETED_EVENT, UPDATED_EVENT } from '../../constants';
 import { Locations } from "../../models";
 import { responseJSON, handledError } from '../common'
