@@ -5,6 +5,9 @@ import {
   FETCH_ALL_LOCATIONS,
   FETCH_ALL_LOCATIONS_SUCCESS,
   FETCH_ALL_LOCATIONS_FAILURE,
+  CREATE_LOCATION_REQUEST,
+  CREATE_LOCATION_SUCCESS,
+  CREATE_LOCATION_FAILURE,
   UPDATE_LOCATION_REQUEST,
   UPDATE_LOCATION_SUCCESS,
   UPDATE_LOCATION_FAILURE,
@@ -19,6 +22,11 @@ const locationsState = {
   fetchLocationsFailure: false,
   fetchLocationsInProgress: false,
   fetchLocationsError: undefined,
+
+  createLocationSuccess: false,
+  createLocationFailure: false,
+  createLocationInProgress: false,
+  createLocationError: undefined,
 
   updateLocationSuccess: false,
   updateLocationFailure: false,
@@ -39,8 +47,8 @@ const mutations = {
     state.fetchLocationsInProgress = true;
     state.fetchLocationsError = undefined;
   },
-  [FETCH_ALL_LOCATIONS_SUCCESS](state, locations) {
-    state.locations = locations;
+  [FETCH_ALL_LOCATIONS_SUCCESS](state, data) {
+    state.locations = data.locations;
     state.fetchLocationsSuccess = true;
     state.fetchLocationsFailure = false;
     state.fetchLocationsInProgress = false;
@@ -52,6 +60,28 @@ const mutations = {
     state.fetchLocationsInProgress = false;
     state.fetchLocationsError = false;
   },
+  // "CREATE_LOCATION" mutations
+  [CREATE_LOCATION_REQUEST](state) {
+    state.createLocationSuccess = false;
+    state.createLocationFailure = false;
+    state.createLocationInProgress = true;
+    state.createLocationError = undefined;
+  },
+  [CREATE_LOCATION_SUCCESS](state, location) {
+    const locations = [...state.locations];
+    locations.push(location);
+    state.locations = locations;
+    state.createLocationSuccess = true;
+    state.createLocationFailure = false;
+    state.createLocationInProgress = false;
+    state.createLocationError = undefined;
+  },
+  [CREATE_LOCATION_FAILURE](state, e) {
+    state.createLocationSuccess = false;
+    state.createLocationFailure = true;
+    state.createLocationInProgress = false;
+    state.createLocationError = e.message;
+  },
   // "UPDATE_LOCATION" mutations
   [UPDATE_LOCATION_REQUEST](state) {
     state.updateLocationSuccess = false;
@@ -60,8 +90,10 @@ const mutations = {
     state.updateLocationError = undefined;
   },
   [UPDATE_LOCATION_SUCCESS](state, location) {
-    const locationIndex = state.locations.findIndex(({ id }) => id === location.id);
-    state.locations[locationIndex] = location;
+    const locations = [...state.locations];
+    const locationIndex = locations.findIndex(({ id }) => id === location.id);
+    locations[locationIndex] = location;
+    state.locations = locations;
     state.updateLocationSuccess = true;
     state.updateLocationFailure = false;
     state.updateLocationInProgress = false;
@@ -81,6 +113,8 @@ const mutations = {
     state.deleteLocationError = undefined;
   },
   [DELETE_LOCATION_SUCCESS](state, locationId) {
+    console.log('locationId ->', locationId);
+    console.log('locations:', state.locations.filter(({ id }) => id !== locationId));
     state.locations = state.locations.filter(({ id }) => id !== locationId);
     state.deleteLocationSuccess = true;
     state.deleteLocationFailure = false;
@@ -105,7 +139,16 @@ const actions = {
       commit(FETCH_ALL_LOCATIONS_FAILURE, e.message);
     }
   },
-  async updateLocation({ commit }, { locationId, locationData}) {
+  async createLocation({ commit }, locationObject) {
+    commit(CREATE_LOCATION_REQUEST);
+    try {
+      const { data: { data } } = await locationService.createLocation(locationObject);
+      commit(CREATE_LOCATION_SUCCESS, data);
+    } catch (e) {
+      commit(CREATE_LOCATION_FAILURE, e.message);
+    }
+  },
+  async updateLocation({ commit }, { locationId, locationData }) {
     commit(UPDATE_LOCATION_REQUEST);
     try {
       const { data: { data } } = await locationService.updateLocation(locationId, locationData);
@@ -118,7 +161,7 @@ const actions = {
     commit(DELETE_LOCATION_REQUEST);
     try {
       const { data: { data } } = await locationService.deleteLocation(locationId);
-      commit(DELETE_LOCATION_SUCCESS, data);
+      commit(DELETE_LOCATION_SUCCESS, locationId);
     } catch (e) {
       commit(DELETE_LOCATION_FAILURE, e.message);
     }

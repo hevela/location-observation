@@ -22,8 +22,21 @@ export default {
   },
   updateLocation(locationId, locationObject) {
     const token = sessionStorage.getItem('token');
-    return axios.post(
+    return axios.put(
       `${apiURL}/locations/${locationId}/`,
+      { ...locationObject },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  },
+  createLocation(locationObject) {
+    const token = sessionStorage.getItem('token');
+    return axios.post(
+      `${apiURL}/locations/`,
       { ...locationObject },
       {
         headers: {
