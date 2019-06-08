@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       notEmptyRules: [
-        v => Boolean(v.strip),
+        v => !!v || 'This field is required',
       ],
       show: false,
       username: '',
@@ -82,7 +82,7 @@ export default {
     }),
   },
   watch: {
-    signedIn(oldValue, newValue) {
+    signedIn(newValue) {
       if (newValue === true) {
         this.$router.push('/admin');
       }
