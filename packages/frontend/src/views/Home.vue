@@ -64,7 +64,6 @@ export default {
 
     // Fired when the server sends something on the "message" channel.
     message(data) {
-      console.log('data.event ->', data.event);
       switch (data.event) {
         case 'UPDATED':
           this.updateLocationList(data.location);

@@ -93,6 +93,7 @@ const mutations = {
   [UPDATE_LOCATION_SUCCESS](state, location) {
     const locations = [...state.locations];
     const locationIndex = locations.findIndex(
+      // force into decimal in case the id comes as string
       ({ id }) => id === parseInt(location.id, decimalBase),
     );
     locations[locationIndex] = location;
@@ -117,6 +118,7 @@ const mutations = {
   },
   [DELETE_LOCATION_SUCCESS](state, locationId) {
     state.locations = state.locations.filter(
+      // force into decimal in case the id comes as string
       ({ id }) => id !== parseInt(locationId, decimalBase),
     );
     state.deleteLocationSuccess = true;
