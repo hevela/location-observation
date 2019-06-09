@@ -137,38 +137,38 @@ export default {
     },
   },
   watch: {
-    createLocationSuccess(newValue) {
-      if (newValue) {
+    createLocationSuccess(successIsTrue) {
+      if (successIsTrue) {
         this.setSuccess('Location created correctly');
       }
     },
-    createLocationFailure(newValue) {
-      if (newValue) {
+    createLocationFailure(failureIsTrue) {
+      if (failureIsTrue) {
         this.setError(this.createLocationError);
       }
     },
-    updateLocationSuccess(newValue) {
-      if (newValue) {
+    updateLocationSuccess(successIsTrue) {
+      if (successIsTrue) {
         this.setSuccess('Location updated correctly');
       }
     },
-    updateLocationFailure(newValue) {
-      if (newValue) {
+    updateLocationFailure(failureIsTrue) {
+      if (failureIsTrue) {
         this.setError(this.updateLocationError);
       }
     },
-    deleteLocationSuccess(newValue) {
-      if (newValue) {
+    deleteLocationSuccess(successIsTrue) {
+      if (successIsTrue) {
         this.setSuccess('Location deleted correctly');
       }
     },
-    deleteLocationFailure(newValue) {
-      if (newValue) {
+    deleteLocationFailure(failureIsTrue) {
+      if (failureIsTrue) {
         this.setError(this.deleteLocationError);
       }
     },
-    location(newValue) {
-      if (!newValue.id) {
+    location(newLocation) {
+      if (!newLocation.id) {
         this.resetForm();
       } else {
         this.open = this.location.open;
