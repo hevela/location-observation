@@ -9,7 +9,6 @@ Vue.use(vuetify);
 
 describe('LocationForm.vue', () => {
   const localVue = createLocalVue();
-  localVue.use(vuetify);
   localVue.use(Vuex);
   let wrapper;
   let actions;
