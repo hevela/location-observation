@@ -26,6 +26,7 @@
           ref="form"
           v-model="valid"
           lazy-validation
+          class="location-form"
         >
           <v-text-field
             v-model="name"
@@ -59,6 +60,7 @@
             color="warning"
             @click="deleteLoc"
             :loading="deleteLocationInProgress"
+            class="delete-button"
           >
             Delete location
           </v-btn>
@@ -67,6 +69,7 @@
             color="#00818a"
             @click="validate"
             :loading="updateLocationInProgress || createLocationInProgress"
+            class="submit-button"
           >
             <template v-if="locationId">Update</template>
             <template v-else>Create</template>

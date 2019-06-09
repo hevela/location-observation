@@ -2,7 +2,7 @@
   <v-container grid-list-xl text-xs-center fluid >
     <v-layout justify-center align-center>
       <v-flex xs10>
-        <v-form class="xs12">
+        <v-form class="xs12 sign-in-form">
           <v-card dark >
             <v-card-title>
               <h1 class="text">Sign In</h1>
@@ -45,7 +45,11 @@
                   xs12
                   md12
                 >
-                  <v-btn color="info" @click="authenticate">
+                  <v-btn
+                    class="authenticate-button"
+                    color="info"
+                    @click="authenticate"
+                  >
                     Sign In
                   </v-btn>
                 </v-flex>
