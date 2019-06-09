@@ -39,6 +39,7 @@ const locationsState = {
   deleteLocationError: undefined,
 };
 
+const decimalBase = 10;
 const mutations = {
   // "FETCH_ALL" mutations
   [FETCH_ALL_LOCATIONS](state) {
@@ -91,7 +92,10 @@ const mutations = {
   },
   [UPDATE_LOCATION_SUCCESS](state, location) {
     const locations = [...state.locations];
-    const locationIndex = locations.findIndex(({ id }) => id === location.id);
+    const locationIndex = locations.findIndex(
+      // force into decimal in case the id comes as string
+      ({ id }) => id === parseInt(location.id, decimalBase),
+    );
     locations[locationIndex] = location;
     state.locations = locations;
     state.updateLocationSuccess = true;
@@ -113,9 +117,10 @@ const mutations = {
     state.deleteLocationError = undefined;
   },
   [DELETE_LOCATION_SUCCESS](state, locationId) {
-    console.log('locationId ->', locationId);
-    console.log('locations:', state.locations.filter(({ id }) => id !== locationId));
-    state.locations = state.locations.filter(({ id }) => id !== locationId);
+    state.locations = state.locations.filter(
+      // force into decimal in case the id comes as string
+      ({ id }) => id !== parseInt(locationId, decimalBase),
+    );
     state.deleteLocationSuccess = true;
     state.deleteLocationFailure = false;
     state.deleteLocationInProgress = false;
@@ -168,7 +173,21 @@ const actions = {
   },
 };
 
-const getters = {};
+const openMarkerColor = '#00818a';
+const closedMarkerColor = '#404b69';
+const getters = {
+  markerLocations: state => state.locations.map(
+    location => (
+      {
+        id: location.id,
+        name: location.name,
+        coordinates: [location.longitude, location.latitude],
+        color: location.open ? openMarkerColor : closedMarkerColor,
+        status: location.open ? 'Open' : 'Closed',
+      }
+    ),
+  ),
+};
 
 export default {
   namespaced: true,
