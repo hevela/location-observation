@@ -42,7 +42,6 @@ export default {
     const mapStyle = 'mapbox://styles/mapbox/streets-v11';
     return {
       isConnected: false,
-      socketMessage: '',
       mapBoxToken,
       mapStyle,
     };
