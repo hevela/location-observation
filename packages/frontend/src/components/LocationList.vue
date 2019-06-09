@@ -25,6 +25,7 @@
     </v-list>
     <v-card-text style="position: relative">
       <v-btn
+        class="new-location"
         absolute
         dark
         fab
