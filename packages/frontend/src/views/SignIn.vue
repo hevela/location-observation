@@ -1,8 +1,8 @@
 <template>
-  <v-form>
-    <v-container grid-list-xl text-xs-center>
-      <v-layout row wrap>
-        <v-flex xs10 offset-xs1>
+  <v-container grid-list-xl text-xs-center fluid >
+    <v-layout justify-center align-center>
+      <v-flex xs10>
+        <v-form class="xs12">
           <v-card dark >
             <v-card-title>
               <h1 class="text">Sign In</h1>
@@ -52,10 +52,10 @@
               </v-layout>
             </v-card-text>
           </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-form>
+        </v-form>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       notEmptyRules: [
-        v => Boolean(v.strip),
+        v => !!v || 'This field is required',
       ],
       show: false,
       username: '',
@@ -82,7 +82,7 @@ export default {
     }),
   },
   watch: {
-    signedIn(oldValue, newValue) {
+    signedIn(newValue) {
       if (newValue === true) {
         this.$router.push('/admin');
       }

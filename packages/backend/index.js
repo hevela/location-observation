@@ -7,7 +7,6 @@ import cors from 'cors';
 
 import locations from './app_modules/locations/router';
 import auth from './app_modules/admin/router';
-import { DEFAULT_PORT } from './constants';
 import { Users } from './models';
 import dotenv from 'dotenv';
 
@@ -20,7 +19,8 @@ const app = express();
 
 app.use(cors());
 
-
+const decimalBase = 10;
+const DEFAULT_PORT = parseInt(process.env['DEFAULT_PORT'], decimalBase);
 const server = app.listen(DEFAULT_PORT, ()=>
     console.log(`Server is listening on port ${DEFAULT_PORT}`));
 

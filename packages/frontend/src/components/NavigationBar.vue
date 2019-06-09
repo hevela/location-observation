@@ -22,7 +22,7 @@
           <v-list-tile-title>Sign In</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile to="/signin" v-else>
+      <v-list-tile to="/admin" v-else>
         <v-list-tile-action>
           <v-icon>settings</v-icon>
         </v-list-tile-action>
@@ -56,7 +56,7 @@ export default {
     }),
   },
   watch: {
-    signedIn(oldValue, newValue) {
+    loggedIn(newValue) {
       if (newValue === false) {
         this.$router.push('/');
       }
