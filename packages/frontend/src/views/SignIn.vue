@@ -1,8 +1,8 @@
 <template>
-  <v-form>
-    <v-container grid-list-xl text-xs-center>
-      <v-layout row wrap>
-        <v-flex xs10 offset-xs1>
+  <v-container grid-list-xl text-xs-center fluid >
+    <v-form class="xs12">
+      <v-layout justify-center align-center>
+        <v-flex xs10>
           <v-card dark >
             <v-card-title>
               <h1 class="text">Sign In</h1>
@@ -54,8 +54,8 @@
           </v-card>
         </v-flex>
       </v-layout>
-    </v-container>
-  </v-form>
+    </v-form>
+  </v-container>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex';

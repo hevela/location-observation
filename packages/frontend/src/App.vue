@@ -7,13 +7,13 @@
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
-        <v-layout justify-center align-center>
+        <v-layout>
           <router-view/>
         </v-layout>
       </v-container>
     </v-content>
     <v-footer app fixed>
-      <span>&copy; 2019</span>
+      <span>Makko - 2019</span>
     </v-footer>
   </v-app>
 </template>
