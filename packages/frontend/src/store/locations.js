@@ -160,7 +160,7 @@ const actions = {
   async deleteLocation({ commit }, locationId) {
     commit(DELETE_LOCATION_REQUEST);
     try {
-      const { data: { data } } = await locationService.deleteLocation(locationId);
+      await locationService.deleteLocation(locationId);
       commit(DELETE_LOCATION_SUCCESS, locationId);
     } catch (e) {
       commit(DELETE_LOCATION_FAILURE, e.message);

@@ -1,8 +1,8 @@
 <template>
   <v-container grid-list-xl text-xs-center fluid >
-    <v-form class="xs12">
-      <v-layout justify-center align-center>
-        <v-flex xs10>
+    <v-layout justify-center align-center>
+      <v-flex xs10>
+        <v-form class="xs12">
           <v-card dark >
             <v-card-title>
               <h1 class="text">Sign In</h1>
@@ -52,9 +52,9 @@
               </v-layout>
             </v-card-text>
           </v-card>
-        </v-flex>
-      </v-layout>
-    </v-form>
+        </v-form>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 <script>
