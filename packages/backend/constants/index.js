@@ -1,0 +1,15 @@
+export const HTTP_CODES = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  NOT_FOUND: 404,
+  METHOD_NOT_ALLOWED: 405,
+  INTERNAL_SERVER_ERROR: 500,
+};
+
+export const CHANNEL = 'message';
+export const CREATE_EVENT = 'CREATED';
+export const DELETED_EVENT = 'DELETED';
+export const UPDATED_EVENT = 'UPDATED';
