@@ -389,7 +389,9 @@ contains the unit tests for the frontend
 - websocket events were not tested
 - In the frontend some store optimizations could be used, for example to avoid extra requests to the API when 
   switching between admin and map views
-- A factory patter could be used to minimize the similar code to handle requests status (in progress, success, failure)  
+- A factory pattern could be used to minimize the similar code to handle requests status (in progress, success, failure)  
+- No separate databases were configured for the project. This means that the unit tests in the backend runs against       
+  development data. The unit testing ideally should create and destroy whatever data it needs
 
 [mapbox]: http://mapbox.com
 [MapboxGL]: http://mapbox.com
