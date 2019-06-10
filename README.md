@@ -7,7 +7,7 @@ should show the name of the location and a status indicating whether it’s open
 The frontend should have at least basic editing capabilities for locations, and any changes on
 the backend datastore should be reflected without refreshing.
 
-<insert gif of the working platform>
+![](documentation_assets/locations.gif)
 
 ## Tech Stack
 The technologies used are:
@@ -64,7 +64,7 @@ The technologies used are:
 ## Implementation design
 ### Database
 Two tables are needed to support the proposed solution.
-<insert diagram>
+![](documentation_assets/DataModel.png)
 
 **locations**
 
@@ -76,14 +76,14 @@ This table holds the information of the users authorized to make changes in the 
 are username and password, the later is encrypted before being saved.
 
 ### Architecture diagram
-<insert diagram>
+![](documentation_assets/architecture.png)
 
 The architecture of the implemented solution consists in a backend server powered by nodejs/express and sqlite3 as database
 The backend server offers an API and a websocket service implemented with [socket.io]
 
 The frontend consumes the API to display a map of locations. This map is provided by [MapboxGL]. The frontend also
 uses the API to manage the locations (create, edit, delete).
-<insert component diagram>
+![](documentation_assets/ComponentDiagram.png)
 
 ### Authentication
 Although the challenge description did not specified that the request needed to be authenticated, it seemed logical 
@@ -91,9 +91,8 @@ that any operation that mutates the data needs to be from an authorized user.
 
 To achieve that, the backend implements an authentication endpoint. This endpoint receives the username and password
 of the user and returns a JWT token. This pattern is widely used to authenticate RESTFUL API requests
-
-<insert authentication flow>
-<insert authorization flow>
+![](documentation_assets/JWTauthentication.png)
+![](documentation_assets/AuthRequests.png)
 
 ### API
 #### Authenticate a user
