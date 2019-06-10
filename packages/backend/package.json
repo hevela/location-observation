@@ -4,6 +4,8 @@
   "description": "Backend code for location-observation",
   "main": "index.js",
   "scripts": {
+    "db:migrate": "node_modules/.bin/sequelize db:migrate",
+    "db:seed": "node_modules/.bin/sequelize db:seed:all",
     "start": "nodemon index.js --exec babel-node --presets babel-preset-env",
     "start:prod": "NODE_ENV=production nodemon index.js --exec babel-node --presets babel-preset-env",
     "test": "mocha --require babel-register tests/*.js --exit"
